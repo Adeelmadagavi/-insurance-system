@@ -18,16 +18,16 @@
     <h2>Register as a New Farmer</h2>
     <form id="registerForm" action="register.php" method="POST">
       <label for="name">Full Name:</label>
-      <input type="text" id="name" name="name" required>
+      <input type="text" id="name" name="name"  placeholder="Enter your full name"  required>
 
       <label for="phone">Phone Number:</label>
-      <input type="text" id="phone" name="phone" required>
+      <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
 
       <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
+      <input type="email" id="email" name="email" placeholder="Enter your email address" required>
 
       <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
+      <input type="password" id="password" name="password" placeholder="Create a password" required>
 
       <button type="submit">Register</button>
     </form>

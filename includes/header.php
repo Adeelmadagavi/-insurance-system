@@ -16,10 +16,18 @@ session_start();
   <link rel="stylesheet" href="./assets/css/contact.css">
   <link rel="stylesheet" href="./assets/css/footer.css">
   <link rel="stylesheet" href="./assets/css/admin_s.css">
+  <link rel="stylesheet" href="./assets/css/header.css">
+
   <script src="./assets/js/cc.js" defer></script>
   <script src="./assets/js/language.js" defer></script>
   <script src="./assets/js/voice.js" defer></script>
   <script src="./assets/js/notification.js" defer></script>
+
+  <!-- Toastify CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<!-- Toastify JS -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
 
 </head>
 <body>
@@ -27,10 +35,16 @@ session_start();
   <!-- Navbar -->
   <header>
     <nav class="navbar">
-      <div class="logo">
+    <div class="logo">
         <img src="./assets/images/logo1.png" alt="Farmer's Insurance Platform">
       </div>
-      <ul class="nav-links">
+
+      <div class="menu-toggle" id="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <ul class="nav-links" id="nav-links">
         <li><a href="index.php">Home</a></li>
         <li><a href="about.php">About</a></li>
         <li><a href="contact.php">Contact</a></li>
@@ -58,3 +72,24 @@ session_start();
   <div id="google_translate_element"></div>
   <script src="./assets/js/language.js"></script>
   <script src="./assets/js/voice.js"></script>
+  <script>
+    // JavaScript for mobile menu toggle
+    document.getElementById('mobile-menu').addEventListener('click', function() {
+      document.getElementById('nav-links').classList.toggle('active');
+      document.getElementById('language-selector').classList.toggle('active');
+      document.getElementById('voice-assistant').classList.toggle('active');
+    });
+    
+    // Highlight current page in navigation
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentLocation = location.pathname;
+      const menuItems = document.querySelectorAll('.nav-links a');
+      const menuLength = menuItems.length;
+      
+      for (let i = 0; i < menuLength; i++) {
+        if (menuItems[i].getAttribute('href') === currentLocation) {
+          menuItems[i].className = 'active';
+        }
+      }
+    });
+  </script>

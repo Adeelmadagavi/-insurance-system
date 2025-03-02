@@ -17,12 +17,12 @@
     flex-direction: column;
   }
   
-  header {
+  /* header {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 20px;
-  }
+  } */
   
-  .navbar {
+  /* .navbar {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -53,7 +53,7 @@
   .navbar .nav-links a:hover {
     color: #f2a900;
   }
-  
+   */
 /* Login Form Section */
 .form-section {
     background-color: rgba(255, 255, 255, 0.8);
@@ -94,46 +94,118 @@
   }
   
   .form-section {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 30px;
-    max-width: 400px;
-    margin: 50px auto;
-    border-radius: 8px;
-  }
-  
-  .form-section h2 {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    width: 400px;
+    margin: 50 auto;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.form-section:hover {
+    transform: translateY(-5px);
+}
+
+.form-section h2 {
     text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .form-section label {
-    display: block;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 28px;
+    position: relative;
+    text-transform: uppercase;
     font-weight: bold;
-  }
-  
-  .form-section input {
+}
+
+.form-section h2:after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: #d7802e;
+    margin: 10px auto 0;
+    border-radius: 3px;
+}
+
+.input-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.form-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    transition: all 0.3s ease;
+}
+
+.form-section select,
+.form-section input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .form-section button {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    color: #333;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-section select:focus,
+.form-section input:focus {
+    border-color: #d7802e;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(215, 128, 46, 0.1);
+    outline: none;
+}
+
+.form-section button {
     width: 100%;
-    padding: 10px;
+    padding: 14px;
     background-color: #d7802e;
-    color: rgb(0, 0, 0);
+    color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-  }
-  
-  .form-section button:hover {
-    background-color: #3c7b2e;
-  }
-  
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 4px 6px rgba(215, 128, 46, 0.2);
+}
+
+.form-section button:hover {
+    background-color: #c06a1f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(215, 128, 46, 0.3);
+}
+
+.form-section button:active {
+    transform: translateY(0);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 25px;
+    color: #666;
+    font-size: 15px;
+}
+
+.form-footer a {
+    color: #d7802e;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.form-footer a:hover {
+    color: #3c7b2e;
+    text-decoration: underline;
+}
+
+
   /* Footer Styles */
   footer {
     display: flex;
@@ -243,7 +315,7 @@
 
   /* Mobile responsiveness */
   @media (max-width: 768px) {
-    .navbar .nav-links {
+    /* .navbar .nav-links {
       display: none;
     }
   
@@ -261,7 +333,7 @@
     .navbar .nav-links li {
       margin-left: 0;
       margin-bottom: 15px;
-    }
+    } */
   
     .main-content h1 {
       font-size: 2rem;

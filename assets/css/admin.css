@@ -29,12 +29,12 @@ body {
   color: #333;
 }
 
- header {
+ /* header {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 20px;
-  }
+  } */
   
-
+/* 
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -61,7 +61,7 @@ body {
 
 .nav-links li a:hover {
   text-decoration: underline;
-}
+} */
 
 /* Dashboard Section */
 .dashboard {
@@ -193,12 +193,14 @@ footer {
 
 /* Responsive Styling */
 @media (max-width: 768px) {
-  .navbar .nav-links {
+  /* .navbar .nav-links {
     flex-direction: column;
     gap: 10px;
-  }
+  } */
 
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
 }
+
+

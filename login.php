@@ -7,28 +7,52 @@
     background-position: center;
   }
 </style>
+
+<script>
+function showToast(message, type) {
+    Toastify({
+        text: message,
+        duration: 3000,
+        gravity: "top", 
+        position: "right",
+        backgroundColor: type === "success" ? "green" : "red",
+        stopOnFocus: true
+    }).showToast();
+}
+</script>
+
+
 <div class="form-section">
         <h2>Login</h2>
         <form action="login.php" method="POST">
-            <label for="userType">User Type:</label>
-            <select name="userType" id="userType" required>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-            </select>
-            <br>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <br>
-            <button type="submit">Login</button>
+            <div class="input-group">
+                <label for="userType">User Type</label>
+                <select name="userType" id="userType" required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            
+            <button type="submit">Log In</button>
         </form>
-        <p>Don't have an account? <a href="register.php">Register here</a></p>
+        <div class="form-footer">
+            <p>Don't have an account? <a href="register.php">Register here</a></p>
+        </div>
     </div>
-
-<?php
+ <?php
 include 'includes/config.php';
+session_start();
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $userType = $_POST['userType'];
     $email = $_POST['email'];
@@ -39,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else if ($userType == 'admin') {
         $query = "SELECT * FROM admins WHERE email = ?";
     } else {
-        echo "Invalid user type.";
+        echo "<script>showToast('Invalid user type', 'error');</script>";
         exit();
     }
 
@@ -50,23 +74,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
-        if ($password == $row['password']) { // Match password without hash
+
+        if ($password === $row['password']) { // If password matches
             $_SESSION['user_id'] = $row['user_id'];
             $_SESSION['user_type'] = $userType;
 
-            if ($userType == 'user') {
-                header("Location: farmer_dashboard.php");
-            } else if ($userType == 'admin') {
-                header("Location: admin.php");
-            }
-            exit();
+            echo "<script>
+                showToast('Login successful! Redirecting...', 'success');
+                setTimeout(() => { 
+                    window.location.href = '". ($userType == 'user' ? 'farmer_dashboard.php' : 'admin.php') ."';
+                }, 1500);
+            </script>";
         } else {
-            echo "Invalid password.";
+            echo "<script>showToast('Invalid password', 'error');</script>";
         }
     } else {
-        echo "<center>No user found with this email.</center>";
+        echo "<script>showToast('Invalid email or user type', 'error');</script>";
     }
 }
 ?>
-
-<?php include 'includes/footer.php'; ?>

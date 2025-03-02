@@ -12,19 +12,19 @@
   <h2>Report an Incident</h2>
   <form action="" method="POST" enctype="multipart/form-data">
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
+    <input type="text" id="name" name="name" placeholder="Enter a Name" required>
 
     <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
+    <input type="email" id="email" name="email"  placeholder="Enter a Email" required>
 
     <label for="phone">Phone Number:</label>
-    <input type="tel" id="phone" name="phone" required>
+    <input type="tel" id="phone" name="phone"  placeholder="Enter a Phone Number" required>
 
     <label for="aadhaar">Aadhaar Card Number:</label>
-    <input type="text" id="aadhaar" name="aadhaar" required>
+    <input type="text" id="aadhaar" name="aadhaar"  placeholder="Enter a Adharcard Number" required>
 
     <label for="pan">PAN Number:</label>
-    <input type="text" id="pan" name="pan" required>
+    <input type="text" id="pan" name="pan"  placeholder="Enter a Pancard Number" required>
 
     <label for="description">Description of Incident:</label>
     <textarea id="description" name="description" rows="5" required></textarea>

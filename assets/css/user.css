@@ -17,11 +17,11 @@
   }
   
   /* Navbar */
-  header {
+  /* header {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 20px;
-  }
-  
+  } */
+/*   
   .navbar {
     display: flex;
     justify-content: space-between;
@@ -50,7 +50,7 @@
   
   .navbar .nav-links a:hover {
     color: #f2a900;
-  }
+  } */
   
   /* Profile Section */
   .profile {
@@ -136,7 +136,7 @@
   
   /* Responsive Styles */
   @media (max-width: 768px) {
-    .navbar .nav-links {
+    /* .navbar .nav-links {
       display: none;
     }
   
@@ -159,7 +159,7 @@
     .navbar .nav-links a {
       font-size: 1.5rem;
       padding: 10px;
-    }
+    } */
   
     .profile {
       padding: 20px;

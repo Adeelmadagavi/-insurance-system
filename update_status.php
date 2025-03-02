@@ -1,20 +1,27 @@
+
 <?php
-include 'db_connect.php';
+require './includes/config.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = intval($_POST['id']);
-    $status = $_POST['status'];
+$incidentId = $_GET['id'];
+$action = $_GET['action'];
 
-    $stmt = $conn->prepare("UPDATE reports SET status = ? WHERE id = ?");
-    $stmt->bind_param("si", $status, $id);
-
-    if ($stmt->execute()) {
-        echo "Status updated successfully!";
-    } else {
-        echo "Error updating status!";
-    }
-
-    $stmt->close();
-    $conn->close();
+// Validate action
+if (!in_array($action, ['approve', 'reject'])) {
+    die(json_encode(['success' => false, 'message' => 'Invalid action']));
 }
+
+// Update status in the database
+$newStatus = ($action === 'approve') ? 'approved' : 'rejected';
+$sql = "UPDATE incidents SET status = ? WHERE incident_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('si', $newStatus, $incidentId);
+
+if ($stmt->execute()) {
+    echo json_encode(['success' => true]);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+}
+
+$stmt->close();
+$conn->close();
 ?>
