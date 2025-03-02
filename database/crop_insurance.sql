@@ -1,5 +1,4 @@
 -- <!-- SQL Schema -->
-
 -- Users table to store farmer registration details
 CREATE TABLE users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -14,7 +13,6 @@ INSERT INTO users (full_name, phone_number, email, password) VALUES
 ('John Smith', '+1-555-123-4567', 'john.smith@email.com', 'john123'),
 ('Mary Johnson', '+1-555-987-6543', 'mary.johnson@email.com', 'mary123' ),
 ('David Williams', '+1-555-654-7890', 'david.williams@email.com', 'david123' );
-
 
 -- Admin table for platform administrators
 CREATE TABLE admins (
