@@ -21,62 +21,76 @@ function showToast(message, type) {
 }
 </script>
 
-
 <div class="form-section">
-        <h2>Login</h2>
-        <form action="login.php" method="POST">
-            <div class="input-group">
-                <label for="userType">User Type</label>
-                <select name="userType" id="userType" required>
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
-            </div>
-            
-            <div class="input-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
-            </div>
-            
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            
-            <button type="submit">Log In</button>
-        </form>
-        <div class="form-footer">
-            <p>Don't have an account? <a href="register.php">Register here</a></p>
+    <h2>Login</h2>
+    <form action="login.php" method="POST">
+        <div class="input-group">
+            <label for="userType">User Type</label>
+            <select name="userType" id="userType" required>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
         </div>
+        
+        <div class="input-group">
+            <label for="loginId">Email or Phone Number</label>
+            <input type="text" id="loginId" name="loginId" placeholder="Enter your email or phone number" required>
+        </div>
+        
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        
+        <button type="submit">Log In</button>
+    </form>
+    <div class="form-footer">
+        <p>Don't have an account? <a href="register.php">Register here</a></p>
     </div>
- <?php
+</div>
+<?php
 include 'includes/config.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $userType = $_POST['userType'];
-    $email = $_POST['email'];
+    $loginId = $_POST['loginId']; // This can be either email or phone number
     $password = $_POST['password'];
 
+    // Determine the table based on user type
     if ($userType == 'user') {
-        $query = "SELECT * FROM users WHERE email = ?";
+        $table = 'users';
     } else if ($userType == 'admin') {
-        $query = "SELECT * FROM admins WHERE email = ?";
+        $table = 'admins';
     } else {
         echo "<script>showToast('Invalid user type', 'error');</script>";
         exit();
     }
 
+    // Check if the input is an email or phone number
+    if (filter_var($loginId, FILTER_VALIDATE_EMAIL)) {
+        // If it's an email
+        $query = "SELECT * FROM $table WHERE email = ?";
+    } else if (preg_match('/^[0-9]{10,15}$/', $loginId)) {
+        // If it's a phone number
+        $query = "SELECT * FROM $table WHERE phone_number = ?";
+    } else {
+        echo "<script>showToast('Invalid email or phone number format', 'error');</script>";
+        exit();
+    }
+
+    // Prepare and execute the query
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $email);
+    $stmt->bind_param("s", $loginId);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
 
-        if ($password === $row['password']) { // If password matches
-            $_SESSION['user_id'] = $row['user_id'];
+        // Verify the password (plain text comparison for demonstration; use password_verify() for hashed passwords)
+        if ($password === $row['password']) { // Replace with password_verify() if using hashed passwords
+            $_SESSION['user_id'] = $row['user_id'] ?? $row['admin_id']; // Use appropriate ID field
             $_SESSION['user_type'] = $userType;
 
             echo "<script>
@@ -89,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "<script>showToast('Invalid password', 'error');</script>";
         }
     } else {
-        echo "<script>showToast('Invalid email or user type', 'error');</script>";
+        echo "<script>showToast('Invalid email, phone number, or user type', 'error');</script>";
     }
 }
 ?>

@@ -32,7 +32,6 @@ if ($result->num_rows > 0) {
 // Close the connection (optional, as PHP will automatically close it at the end of the script)
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -110,19 +109,54 @@ $conn->close();
             background: #fff;
             padding: 20px;
             border-radius: 10px;
-            max-width: 80%;
-            max-height: 80%;
-            overflow: auto;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
         .close {
             color: #aaa;
-            float: right;
+            position: absolute;
+            top: 10px;
+            right: 20px;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
         }
         .close:hover {
             color: #000;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+        .image-container img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30px;
+            color: #fff;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 50%;
+            user-select: none;
+        }
+        .nav-arrow.left {
+            left: 10px;
+        }
+        .nav-arrow.right {
+            right: 10px;
         }
     </style>
 </head>
@@ -192,12 +226,14 @@ $conn->close();
                             <td><?php echo htmlspecialchars($incident['description']); ?></td>
                             <td>
                                 <?php if (!empty($incident['images'])): ?>
-                                    <span class="icon" onclick="openModal('<?php echo base64_encode($incident['images']); ?>', 'image')">📷</span>
+                                    <span class="icon" onclick="openImageModal('<?php echo $incident['id']; ?>')">📷</span>
+                                    <div id="imageData-<?php echo $incident['id']; ?>" style="display: none;"><?php echo $incident['images']; ?></div>
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <?php if (!empty($incident['videos'])): ?>
-                                    <span class="icon" onclick="openModal('<?php echo base64_encode($incident['videos']); ?>', 'video')">🎥</span>
+                                    <span class="icon" onclick="openVideoModal('<?php echo $incident['id']; ?>')">🎥</span>
+                                    <div id="videoData-<?php echo $incident['id']; ?>" style="display: none;"><?php echo $incident['videos']; ?></div>
                                 <?php endif; ?>
                             </td>
                             <td><?php echo htmlspecialchars($incident['status']); ?></td>
@@ -213,33 +249,87 @@ $conn->close();
         </table>
     </section>
 
-    <!-- Modal for Images and Videos -->
-    <div id="modal" class="modal">
+    <!-- Modal for Images -->
+    <div id="imageModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <div id="modal-body"></div>
+            <div class="image-container">
+                <img id="modalImage" src="" alt="Incident Image">
+            </div>
+            <span class="nav-arrow left" onclick="changeImage(-1)">&#10094;</span>
+            <span class="nav-arrow right" onclick="changeImage(1)">&#10095;</span>
+        </div>
+    </div>
+
+    <!-- Modal for Videos -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="image-container">
+                <video id="modalVideo" controls style="max-width: 100%; max-height: 100%;">
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
         </div>
     </div>
 
     <script>
-        // Function to open modal
-        function openModal(data, type) {
-            const modal = document.getElementById('modal');
-            const modalBody = document.getElementById('modal-body');
+        let currentImageIndex = 0;
+        let imagesArray = [];
 
-            if (type === 'image') {
-                modalBody.innerHTML = `<img src="data:image/jpeg;base64,${data}" alt="Incident Image" style="max-width: 100%;">`;
-            } else if (type === 'video') {
-                modalBody.innerHTML = `<video controls style="max-width: 100%;"><source src="data:video/mp4;base64,${data}" type="video/mp4"></video>`;
+        // Function to open image modal
+        function openImageModal(incidentId) {
+            const modal = document.getElementById('imageModal');
+            const imageDataElement = document.getElementById(`imageData-${incidentId}`);
+            
+            if (imageDataElement) {
+                const imagesData = imageDataElement.innerHTML;
+                imagesArray = imagesData.split(';').filter(Boolean); // Split by semicolon and remove empty strings
+                
+                if (imagesArray.length > 0) {
+                    currentImageIndex = 0;
+                    document.getElementById('modalImage').src = imagesArray[currentImageIndex];
+                    modal.style.display = 'flex';
+
+                    // Show/hide arrows based on the number of images
+                    document.querySelector('.nav-arrow.left').style.display = imagesArray.length > 1 ? 'block' : 'none';
+                    document.querySelector('.nav-arrow.right').style.display = imagesArray.length > 1 ? 'block' : 'none';
+                }
             }
+        }
 
-            modal.style.display = 'flex';
+        // Function to change image in the modal
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex >= imagesArray.length) {
+                currentImageIndex = 0;
+            } else if (currentImageIndex < 0) {
+                currentImageIndex = imagesArray.length - 1;
+            }
+            document.getElementById('modalImage').src = imagesArray[currentImageIndex];
+        }
+
+        // Function to open video modal
+        function openVideoModal(incidentId) {
+            const modal = document.getElementById('videoModal');
+            const videoDataElement = document.getElementById(`videoData-${incidentId}`);
+            
+            if (videoDataElement) {
+                const videosData = videoDataElement.innerHTML;
+                const videosArray = videosData.split(';').filter(Boolean); // Split by semicolon and remove empty strings
+                
+                if (videosArray.length > 0) {
+                    document.getElementById('modalVideo').src = videosArray[0];
+                    modal.style.display = 'flex';
+                }
+            }
         }
 
         // Function to close modal
         function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.style.display = 'none';
+            document.getElementById('imageModal').style.display = 'none';
+            document.getElementById('videoModal').style.display = 'none';
         }
 
         // Function to update incident status
@@ -261,4 +351,3 @@ $conn->close();
     </script>
 </body>
 </html>
-
